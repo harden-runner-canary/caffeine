@@ -1,6 +1,7 @@
 name: benchmarks
 permissions: read-all
-on: [ push, pull_request ]
+on:
+  workflow_dispatch:
 
 env:
   GRADLE_ENTERPRISE_CACHE_PASSWORD: ${{ secrets.GRADLE_ENTERPRISE_CACHE_PASSWORD }}
@@ -13,14 +14,23 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ 11, 19, 20, GraalVM ]
+        java: [ 11, 19]
     env:
       JAVA_VERSION: ${{ matrix.java }}
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@2e205a28d0e1da00c5f53b161f4067b052c61f34
+        uses: step-security/harden-runner@rc
         with:
-          egress-policy: audit
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            caffeine.gradle-enterprise.cloud:443
+            github.com:443
+            plugins.gradle.org:443
+            repo.maven.apache.org:443
+            api.adoptium.net:443
+            objects.githubusercontent.com:443
       - uses: actions/checkout@v3
       - name: Compute JMH Benchmark
         uses: ./.github/actions/run-gradle
