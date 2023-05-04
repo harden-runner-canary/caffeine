@@ -25,12 +25,12 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
-            caffeine.gradle-enterprise.cloud:443
+            *.gradle-enterprise.cloud:443
             github.com:443
             plugins.gradle.org:443
-            repo.maven.apache.org:443
+            *.apache.org:443
             api.adoptium.net:443
-            objects.githubusercontent.com:443
+            *.githubusercontent.com:443
       - uses: actions/checkout@v3
       - name: Compute JMH Benchmark
         uses: ./.github/actions/run-gradle
